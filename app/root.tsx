@@ -9,6 +9,7 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import { Header } from "./components/header";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -42,7 +43,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <div>
+      <meta property="og:title" content="Badminton" />
+      <meta property="og:description" content="มาตีแบดกันจ๊ะ" />
+      <meta
+        property="og:image"
+        content="https://badmintonthai.or.th/upload/news/17224228951196461094.jpg"
+      ></meta>
+      <Header />
+      <main className="h-screen flex flex-col items-center justify-center ml-24 mr-24">
+        <Outlet />
+      </main>
+    </div>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
