@@ -7,16 +7,23 @@ export const Detail = () => {
     navigate("/organizer");
   };
 
+  const onClickUser = () => {
+    navigate("/users");
+  };
+
   return (
-    <div>
+    <div className="">
       <div className="flex flex-wrap gap-24 items-center justify-center">
         <button
-          className="w-50 h-50 rounded-full px-4 py-2 border-1 rounded hover:bg-blue-700 rounded-full transition"
+          className="w-100 h-100 px-4 py-2 border border-gray-300 hover:bg-green-100 transition cursor-pointer rounded-xl"
           onClick={onClickOrganizer}
         >
           ผู้จัด
         </button>
-        <button className="w-50 h-50 rounded-full px-4 py-2 border-1 rounded hover:bg-blue-700 transition">
+        <button
+          className="w-100 h-100 px-4 py-2 border border-gray-300 hover:bg-green-100 transition cursor-pointer rounded-xl"
+          onClick={onClickUser}
+        >
           ผู้เล่น
         </button>
       </div>
