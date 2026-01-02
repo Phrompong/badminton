@@ -10,18 +10,16 @@ import SettingModal from "@/components/modals/settingModal";
 import Table from "@/components/table";
 import TableMobile from "@/components/tableMobile";
 import { TextInput } from "@/components/textInput";
-import { Settings, Shuffle, UserPlus } from "lucide-react";
+import { Copy, Settings, Shuffle, UserPlus, Users } from "lucide-react";
 import Image from "next/image";
 import { title } from "process";
 import { useEffect, useState } from "react";
-
-const cards = [
-  { title: "Total Players", total: 120 },
-  { title: "Present", total: 85 },
-  { title: "Paid", total: 15 },
-  { title: "Unpaid", total: 3 },
-  { title: "Courts", total: 10 },
-];
+import { createUser, getUsers } from "./actions/user";
+import { useSearchParams } from "next/navigation";
+import Session from "./pages/session";
+import HomePage from "./pages/main";
+import Main from "./pages/main";
+import SessionModal from "@/components/modals/sessionFormModal";
 
 const data = [
   {
@@ -42,7 +40,11 @@ const data = [
   },
 ];
 
-export default function Home() {
+export default function Page() {
+  const searchParams = useSearchParams();
+
+  const code = searchParams.get("code") || "";
+
   const [isImportModalPlayerOpen, setIsImportModalPlayerOpen] =
     useState<boolean>(false);
   const [isSettingModalOpen, setIsSettingModalOpen] = useState<boolean>(false);
@@ -59,6 +61,8 @@ export default function Home() {
   const handleClickEditPlayer = () => {
     setIsEditPlayerModalOpen(true);
   };
+
+  useEffect(() => {}, []);
 
   return (
     <>
@@ -87,27 +91,7 @@ export default function Home() {
         </header>
         <main className="p-1">
           <div className="max-w-7xl mx-20 mx-auto flex flex-col gap-6">
-            <div className="flex justify-center h-[56px]">
-              <TextInput className="w-[50%]" />
-            </div>
-            <section className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8 justify-stretch">
-              {cards.map(({ title, total }) => (
-                <Card key={title} title={title} total={total} />
-              ))}
-            </section>
-            {/* Table Section */}
-            <Table
-              data={data}
-              className="hidden lg:table"
-              handleClickPayment={handleClickPayment}
-              handleClickEditPlayer={handleClickEditPlayer}
-            />
-            <TableMobile
-              data={data}
-              className="block lg:hidden"
-              handleClickPayment={handleClickPayment}
-              handleClickEditPlayer={handleClickEditPlayer}
-            />
+            {code ? <Main /> : <Session />}
           </div>
         </main>
       </div>

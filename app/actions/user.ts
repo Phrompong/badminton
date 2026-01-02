@@ -1,24 +1,28 @@
-// "use server";
+"use server";
 
-// import { revalidatePath } from "next/cache";
+import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
-// import { prisma } from "@/lib/prisma";
+export async function createUser(formData: any) {
+  const email = formData?.email;
+  const nameValue = formData?.name;
+  const name = typeof nameValue === "string" ? nameValue.trim() : "";
 
-// export async function createUser(formData: any) {
-//   const email = String(formData.get("email") ?? "").trim();
-//   const nameValue = formData.get("name");
-//   const name = typeof nameValue === "string" ? nameValue.trim() : "";
+  if (!email) {
+    return { ok: false, error: "Email is required." };
+  }
+  await prisma.user.create({
+    data: {
+      email,
+      name: name || null,
+    },
+  });
 
-//   if (!email) {
-//     return { ok: false, error: "Email is required." };
-//   }
-//   await prisma.user.create({
-//     data: {
-//       email,
-//       name: name || null,
-//     },
-//   });
+  revalidatePath("/");
+  return { ok: true };
+}
 
-//   revalidatePath("/");
-//   return { ok: true };
-// }
+export async function getUsers() {
+  const users = await prisma.user.findMany();
+  return users;
+}

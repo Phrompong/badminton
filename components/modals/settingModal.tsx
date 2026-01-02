@@ -1,4 +1,5 @@
-import { Divider, Form, Input, Modal } from "antd";
+import { Divider, Form, FormInstance, Input, Modal } from "antd";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FC } from "react";
 interface ISettingModalProps {
   open?: boolean;
@@ -32,6 +33,21 @@ const footer = () => {
 const formItemStyle = { marginBottom: 8 };
 
 const SettingModal: FC<ISettingModalProps> = ({ open = false, onCancel }) => {
+  const [form] = Form.useForm();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const handleSubmitForm = () => {};
+
+  const handleClickNewSession = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("code", "");
+
+    router.replace(`?${params.toString()}`);
+
+    onCancel?.();
+  };
+
   return (
     <Modal
       title={title()}
@@ -40,12 +56,7 @@ const SettingModal: FC<ISettingModalProps> = ({ open = false, onCancel }) => {
       footer={footer()}
       className="overflow-y-auto"
     >
-      <Form
-        layout="vertical"
-        onFinish={() => {
-          alert("Ok");
-        }}
-      >
+      <Form layout="vertical" onFinish={handleSubmitForm}>
         <div className="flex flex-col gap-4 mt-6">
           <span className="text-xl">Game Setting</span>
 
@@ -118,7 +129,10 @@ const SettingModal: FC<ISettingModalProps> = ({ open = false, onCancel }) => {
                   ไม่สามารถกู้คืนได้
                 </span>
 
-                <button className="w-full p-2 border border-[#DB6362] rounded-md hover:bg-[#FFEBEB] transition cursor-pointer">
+                <button
+                  onClick={handleClickNewSession}
+                  className="w-full p-2 border border-[#DB6362] rounded-md hover:bg-[#FFEBEB] transition cursor-pointer"
+                >
                   <span className="text-[#DB6362] font-bold">
                     เริ่มเซสชันใหม่
                   </span>
