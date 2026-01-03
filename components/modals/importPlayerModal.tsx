@@ -4,6 +4,8 @@ import TextArea from "antd/es/input/TextArea";
 import { FC, useEffect, useState } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import { createPlayer } from "@/app/actions/player";
+import { getSessionByRoomCode } from "@/app/actions/session";
+import { useSearchParams } from "next/navigation";
 
 const levelOptions = [
   { key: "BG", label: "BG – Beginner (มือใหม่)" },
@@ -67,13 +69,17 @@ export const ImportPlayerModal: FC<IImportPlayerModalProps> = ({
   open = false,
   onCancel,
 }) => {
+  const search = useSearchParams();
+  const code = search.get("code");
   const [players, setPlayers] = useState<string>("");
   const [previewPlayers, setPreviewPlayers] = useState<IPlayer[]>([]);
 
   const handleImportPlayers = async () => {
+    const session = await getSessionByRoomCode(code ?? "");
+
     const obj = previewPlayers.map(({ name, level }) => {
       return {
-        sessionId: "56074c9e-0aa9-42b5-8ade-58773f594486",
+        sessionId: session?.id ?? "",
         name,
         level,
       };

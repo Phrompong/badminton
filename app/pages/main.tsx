@@ -50,7 +50,7 @@ const Main: FC<IMainProps> = ({ refresh }) => {
       { title: "Present", total: players.filter((p) => p.isOnline).length },
       { title: "Paid", total: players.filter((p) => p.isPaid).length },
       { title: "Unpaid", total: players.filter((p) => !p.isPaid).length },
-      { title: "Courts", total: 10 },
+      { title: "Courts", total: session.courtCount },
     ];
 
     setCardData(cards);

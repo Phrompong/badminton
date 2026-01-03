@@ -58,6 +58,7 @@ type SessionFormValues = {
   playerCount?: number | string;
   courtCount?: number | string;
   roomCode: string;
+  amountPerGame: number;
 };
 
 interface ISessionModalProps {
@@ -82,13 +83,14 @@ const SessionModal = ({ open, onCancel }: ISessionModalProps) => {
       const payload: CreateSessionInput = {
         name: value.name.trim(),
         startAt,
-        location: value.location?.trim() || null,
+        location: value.location?.trim() ?? "",
         playerCount:
           value.playerCount === undefined || value.playerCount === null
             ? 0
             : Number(value.playerCount),
         courtCount: Number(value.courtCount),
         roomCode: value.roomCode.trim(),
+        amountPerGame: value.amountPerGame,
       };
 
       await createSession(payload);
@@ -191,14 +193,29 @@ const SessionModal = ({ open, onCancel }: ISessionModalProps) => {
                 </Form.Item>
               </div>
 
-              <Form.Item<string>
-                label="Room Code"
-                name="roomCode"
-                style={formItemStyle}
-                rules={[{ required: true, message: "กรุณากรอก Room Code" }]}
-              >
-                <Input placeholder="เช่น BDM-1234" />
-              </Form.Item>
+              <div className="flex gap-2 ">
+                <Form.Item<number>
+                  className="w-full"
+                  label="ค่าเล่นต่อเกมส์ (บาท)"
+                  name="amountPerGame"
+                  style={formItemStyle}
+                  rules={[
+                    { required: true, message: "กรุณากรอกค่าเล่นต่อเกมส์" },
+                  ]}
+                >
+                  <Input placeholder="เช่น 100" />
+                </Form.Item>
+
+                <Form.Item<string>
+                  className="w-full"
+                  label="Room Code"
+                  name="roomCode"
+                  style={formItemStyle}
+                  rules={[{ required: true, message: "กรุณากรอก Room Code" }]}
+                >
+                  <Input placeholder="เช่น BDM-1234" />
+                </Form.Item>
+              </div>
             </div>
           </div>
         </Form>

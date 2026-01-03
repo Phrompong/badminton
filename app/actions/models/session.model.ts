@@ -6,6 +6,7 @@ export interface CreateSessionInput {
   courtCount: number;
   roomCode: string;
   createdBy?: string | null;
+  amountPerGame: number;
 }
 
 export interface ResponseSession {
@@ -16,6 +17,7 @@ export interface ResponseSession {
   playerCount: number;
   courtCount: number;
   roomCode: string;
+  amountPerGame: number;
   isActive: boolean;
   createdDate: Date;
   updatedDate: Date;

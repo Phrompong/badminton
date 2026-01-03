@@ -9,21 +9,21 @@ datasource db {
 }
 
 model Session {
-  id          String   @id @default(uuid()) @db.Uuid
-  name        String   @db.VarChar(255)
-  startAt     DateTime @map("start_at") @db.Timestamptz(6)
-  location    String   @db.VarChar(255)
-  playerCount Int      @default(0) @map("player_count")
-  courtCount  Int      @map("court_count")
-  roomCode    String   @unique @map("room_code") @db.VarChar(255)
-  createdDate DateTime @default(now()) @map("created_date") @db.Timestamptz(6)
-  createdBy   String   @map("created_by") @db.Uuid
-  updatedDate DateTime @default(now()) @updatedAt @map("updated_date") @db.Timestamptz(6)
-  updatedBy   String   @map("updated_by") @db.Uuid
-  isActive    Boolean  @default(true) @map("is_active")
+  id            String   @id @default(uuid()) @db.Uuid
+  name          String   @db.VarChar(255)
+  startAt       DateTime @map("start_at") @db.Timestamptz(6)
+  location      String   @db.VarChar(255)
+  playerCount   Int      @default(0) @map("player_count")
+  courtCount    Int      @map("court_count")
+  roomCode      String   @unique @map("room_code") @db.VarChar(255)
+  amountPerGame Decimal  @map("amount_per_game") @db.Decimal(10, 2)
+  createdDate   DateTime @default(now()) @map("created_date") @db.Timestamptz(6)
+  createdBy     String   @map("created_by") @db.Uuid
+  updatedDate   DateTime @default(now()) @updatedAt @map("updated_date") @db.Timestamptz(6)
+  updatedBy     String   @map("updated_by") @db.Uuid
+  isActive      Boolean  @default(true) @map("is_active")
 
-  players       Player[]
-  sessionConfig SessionConfig?
+  players Player[]
 
   @@map("sessions")
 }
@@ -44,20 +44,4 @@ model Player {
   session Session @relation(fields: [sessionId], references: [id])
 
   @@map("player")
-}
-
-model SessionConfig {
-  id             String   @id @default(uuid()) @db.Uuid
-  sessionId      String   @unique @map("session_id") @db.Uuid
-  courtCount     Int      @map("court_count")
-  pricePerGame   Decimal  @map("price_per_game") @db.Decimal(10, 2)
-  shuttlecockFee Decimal  @map("shuttlecock_fee") @db.Decimal(10, 2)
-  createdDate    DateTime @default(now()) @map("created_date") @db.Timestamptz(6)
-  createdBy      String   @map("created_by") @db.Uuid
-  updatedDate    DateTime @default(now()) @updatedAt @map("updated_date") @db.Timestamptz(6)
-  updatedBy      String   @map("updated_by") @db.Uuid
-
-  session Session @relation(fields: [sessionId], references: [id])
-
-  @@map("session_config")
 }

@@ -1,6 +1,9 @@
-import { Divider, Form, FormInstance, Input, Modal } from "antd";
+"use client";
+
+import { getSessionByRoomCode, patchSession } from "@/app/actions/session";
+import { Divider, Form, FormInstance, Input, message, Modal } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 interface ISettingModalProps {
   open?: boolean;
   onCancel?: () => void;
@@ -17,13 +20,18 @@ const title = () => {
   );
 };
 
-const footer = () => {
+const footer = (form: FormInstance) => {
   return (
     <div className="flex gap-2">
       <button className="border border-1 p-1 rounded-md w-full border-gray-400 hover:bg-gray-100">
         ยกเลิก
       </button>
-      <button className="border border-1 p-1 rounded-md w-full bg-[#00986E] text-white hover:bg-[#007a53]">
+      <button
+        onClick={() => {
+          form.submit();
+        }}
+        className="border border-1 p-1 rounded-md w-full bg-[#00986E] text-white hover:bg-[#007a53]"
+      >
         บันทึกการตั้งค่า
       </button>
     </div>
@@ -34,10 +42,22 @@ const formItemStyle = { marginBottom: 8 };
 
 const SettingModal: FC<ISettingModalProps> = ({ open = false, onCancel }) => {
   const [form] = Form.useForm();
+  const search = useSearchParams();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const code = search.get("code");
+  const [sessionData, setSessionData] = useState<any>();
 
-  const handleSubmitForm = () => {};
+  const handleSubmitForm = async (values: any) => {
+    await patchSession({
+      sessionId: sessionData.id,
+      courtCount: Number(values.courtCount),
+      amountPerGame: Number(values.amountPerGame),
+    });
+
+    message.success("บันทึกการตั้งค่าเรียบร้อยแล้ว");
+    onCancel?.();
+  };
 
   const handleClickNewSession = () => {
     const params = new URLSearchParams(searchParams.toString());
@@ -48,73 +68,65 @@ const SettingModal: FC<ISettingModalProps> = ({ open = false, onCancel }) => {
     onCancel?.();
   };
 
+  const init = async () => {
+    const session = await getSessionByRoomCode(code || "");
+
+    if (!session) return;
+
+    form.setFieldsValue({
+      courtCount: session.courtCount,
+      amountPerGame: session.amountPerGame,
+    });
+
+    setSessionData(session);
+  };
+
+  useEffect(() => {
+    if (!open) return;
+
+    init();
+  }, [open, form]);
+
   return (
     <Modal
       title={title()}
       open={open}
       onCancel={onCancel}
-      footer={footer()}
+      footer={footer(form)}
       className="overflow-y-auto"
     >
-      <Form layout="vertical" onFinish={handleSubmitForm}>
+      <Form form={form} layout="vertical" onFinish={handleSubmitForm}>
         <div className="flex flex-col gap-4 mt-6">
           <span className="text-xl">Game Setting</span>
 
           <div className="flex flex-col">
-            <Form.Item<string>
+            <Form.Item<number>
               label="จำนวนสนาม"
-              name="numberOfCourts"
+              name="courtCount"
               style={formItemStyle}
               rules={[
-                { required: true, message: "Please input your username!" },
+                {
+                  required: true,
+                  message: "Please input the number of courts!",
+                },
               ]}
             >
-              <Input />
+              <Input type="number" />
             </Form.Item>
 
-            <Form.Item<string>
+            <Form.Item<number>
               label="ค่าเล่นต่อเกม (บาท)"
               name="amountPerGame"
               style={formItemStyle}
               rules={[
-                { required: true, message: "Please input your username!" },
+                {
+                  required: true,
+                  message: "Please input your amount per game!",
+                },
               ]}
             >
-              <Input />
+              <Input type="number" />
             </Form.Item>
-
-            <Form.Item<string>
-              label="ค่าลูกขนไก่ (บาท)"
-              name="shuttlecockPrice"
-              style={formItemStyle}
-              rules={[
-                { required: true, message: "Please input your username!" },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-
-            <div className="border border-green-400 rounded-md bg-green-50 p-4 flex flex-col gap-2">
-              <span>สรุปค่าใช้จ่ายต่อเกม</span>
-              <div className="flex justify-between">
-                <span>ค่าเล่น</span>
-                <span>100 บาท</span>
-              </div>
-
-              <div className="flex justify-between">
-                <span>ค่าลูกขนไก่</span>
-                <span>100 บาท</span>
-              </div>
-
-              <div className="border border-green-200"></div>
-
-              <div className="flex justify-between">
-                <span>รวมทั้งหมด</span>
-                <span>150 บาท</span>
-              </div>
-            </div>
-
-            <Divider style={{ borderColor: "#94a3b8" }} />
 
             <div className="flex flex-col gap-4">
               <span className="text-xl text-[#82181A]">Danger Zone</span>

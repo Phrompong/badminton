@@ -36,6 +36,11 @@ export default function Page() {
     setRefresh((prev) => prev + 1);
   };
 
+  const handleCloseSettingModal = () => {
+    setIsSettingModalOpen(false);
+    setRefresh((prev) => prev + 1);
+  };
+
   return (
     <>
       <div className="flex flex-col gap-8">
@@ -75,7 +80,7 @@ export default function Page() {
 
       <SettingModal
         open={isSettingModalOpen}
-        onCancel={() => setIsSettingModalOpen(false)}
+        onCancel={handleCloseSettingModal}
       />
 
       <RandomPlayerModal

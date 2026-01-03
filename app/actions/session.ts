@@ -19,6 +19,7 @@ export async function createSession(params: CreateSessionInput) {
         playerCount: params.playerCount ?? 0,
         courtCount: params.courtCount,
         roomCode: params.roomCode,
+        amountPerGame: params.amountPerGame,
         createdBy: actorId,
         updatedBy: actorId,
       },
@@ -34,10 +35,43 @@ export async function createSession(params: CreateSessionInput) {
 export async function getSessionByRoomCode(
   roomCode: string
 ): Promise<ResponseSession | null> {
-  return await prisma.session.findUnique({
+  const session = await prisma.session.findFirst({
     where: {
       roomCode,
       isActive: true,
     },
   });
+
+  if (!session) {
+    return null;
+  }
+
+  return {
+    ...session,
+    amountPerGame: Number(session.amountPerGame) ?? 0,
+  };
+}
+
+export async function patchSession(params: {
+  sessionId: string;
+  courtCount: number;
+  amountPerGame: number;
+}) {
+  try {
+    const actorId = "00000000-0000-0000-0000-000000000000";
+
+    const result = await prisma.session.update({
+      where: { id: params.sessionId },
+      data: {
+        courtCount: params.courtCount,
+        amountPerGame: params.amountPerGame,
+        updatedDate: new Date(),
+      },
+    });
+
+    return result;
+  } catch (error) {
+    console.error("Error patch session:", error);
+    throw error;
+  }
 }
