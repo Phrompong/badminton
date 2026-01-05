@@ -42,8 +42,39 @@ export async function getPlayersBySessionId(sessionId: string) {
       sessionId,
       isActive: true,
     },
-    orderBy: {
-      createdDate: "asc",
+    orderBy: [
+      {
+        createdDate: "asc",
+      },
+      {
+        name: "asc",
+      },
+    ],
+  });
+}
+
+export async function updateOnlineStatus(playerId: string, isOnline: boolean) {
+  try {
+    return await prisma.player.update({
+      where: {
+        id: playerId,
+      },
+      data: {
+        isOnline,
+        updatedDate: new Date(),
+      },
+    });
+  } catch (error) {
+    console.error("Error updating online status:", error);
+    throw error;
+  }
+}
+
+export async function getAllPlayers(sessionId: string) {
+  return await prisma.player.findMany({
+    where: {
+      sessionId,
+      isActive: true,
     },
   });
 }

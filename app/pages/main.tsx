@@ -13,7 +13,7 @@ import TableMobile from "@/components/tableMobile";
 import PaymentModal from "@/components/modals/paymentModal";
 import EditPlayerModal from "@/components/modals/editPlayerModal";
 import { copyText } from "@/utils/general";
-import { getPlayersBySessionId } from "../actions/player";
+import { getPlayersBySessionId, updateOnlineStatus } from "../actions/player";
 
 interface IMainProps {
   refresh?: number;
@@ -29,6 +29,7 @@ const Main: FC<IMainProps> = ({ refresh }) => {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState<boolean>(false);
   const [isEditPlayerModalOpen, setIsEditPlayerModalOpen] =
     useState<boolean>(false);
+  const [refreshTicket, setRefreshTicket] = useState<number>(0);
 
   const initSession = async (code: string) => {
     const session = await getSessionByRoomCode(code);
@@ -58,6 +59,14 @@ const Main: FC<IMainProps> = ({ refresh }) => {
     setPlayersData(players);
   };
 
+  const handleUpdateOnlineStatus = async (
+    playerId: string,
+    isOnline: boolean
+  ) => {
+    await updateOnlineStatus(playerId, isOnline);
+    setRefreshTicket((prev) => prev + 1);
+  };
+
   const handleClickPayment = () => {
     setIsPaymentModalOpen(true);
   };
@@ -79,7 +88,7 @@ const Main: FC<IMainProps> = ({ refresh }) => {
     if (!code) return;
 
     initSession(code);
-  }, [code, refresh]);
+  }, [code, refresh, refreshTicket]);
 
   return (
     <>
@@ -122,6 +131,7 @@ const Main: FC<IMainProps> = ({ refresh }) => {
           <Table
             data={playersData}
             className="hidden lg:table"
+            handleUpdateOnlineStatus={handleUpdateOnlineStatus}
             handleClickPayment={handleClickPayment}
             handleClickEditPlayer={handleClickEditPlayer}
           />

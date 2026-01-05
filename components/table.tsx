@@ -1,6 +1,6 @@
 import { FC } from "react";
-import Button from "./button";
-import { Edit2, Trash2, CreditCard, ArrowUpDown } from "lucide-react";
+import { Edit2, Trash2, CreditCard, Check } from "lucide-react";
+import { updateOnlineStatus } from "@/app/actions/player";
 
 const headers = [
   "สถานะ",
@@ -32,6 +32,7 @@ const rows = [
 
 interface ITableProps {
   className?: string;
+  handleUpdateOnlineStatus: (playerId: string, isOnline: boolean) => void;
   handleClickPayment: () => void;
   handleClickEditPlayer: () => void;
   data: any[];
@@ -42,6 +43,7 @@ const Table: FC<ITableProps> = ({
   className,
   handleClickPayment,
   handleClickEditPlayer,
+  handleUpdateOnlineStatus,
 }) => {
   return (
     <table
@@ -66,9 +68,27 @@ const Table: FC<ITableProps> = ({
             className="border-t border-slate-200 hover:bg-gray-50"
           >
             <td className="flex p-4 justify-center">
-              <button className="border border-slate-500 p-2 border-gray-100 rounded-md flex flex-row items-center gap-2  text-gray-600 hover:bg-gray-300 cursor-pointer">
-                <div className="rounded-full border border-1 p-2 w-2 h-2"></div>
-                <span>{row.isOnline ? "เช็คอิน" : "ไม่เช็คอิน"}</span>
+              <button
+                onClick={() => handleUpdateOnlineStatus(row.id, !row.isOnline)}
+                className={
+                  !row.isOnline
+                    ? "border border-slate-500 p-2 border-gray-100 rounded-md flex flex-row items-center gap-2  text-gray-600 hover:bg-gray-300 cursor-pointer"
+                    : "border bg-[#00BBA0] p-2 border-gray-100 rounded-md flex flex-row items-center gap-2  text-gray-600 hover:bg-[#009E87] cursor-pointer"
+                }
+              >
+                {!row.isOnline ? (
+                  <>
+                    <div className="rounded-full border border-1 p-2 w-2 h-2"></div>
+                    <span>{row.isOnline ? "มาแล้ว" : "เช็คอิน"}</span>
+                  </>
+                ) : (
+                  <>
+                    <Check className="text-white" />
+                    <span className="text-white">
+                      {row.isOnline ? "มาแล้ว" : "เช็คอิน"}
+                    </span>
+                  </>
+                )}
               </button>
             </td>
             <td className="p-4 text-center align-middle">{row.name}</td>
