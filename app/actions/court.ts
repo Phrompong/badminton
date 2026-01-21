@@ -36,3 +36,36 @@ export async function getCourtAvailable(roomCode: string) {
 
   return courts;
 }
+
+export async function getCourtAvailableBySessionId(sessionId: string) {
+  return await prisma.court.findMany({
+    where: {
+      sessionId,
+      isAvailable: true,
+    },
+    orderBy: {
+      no: "asc",
+    },
+  });
+}
+
+export async function removeCourt(courtId: string) {
+  return await prisma.court.update({
+    where: { id: courtId },
+    data: { isAvailable: false, isDeleted: true },
+  });
+}
+
+export async function patchNameCourt(courtId: string, courtName: string) {
+  return await prisma.court.update({
+    where: { id: courtId },
+    data: { name: courtName },
+  });
+}
+
+export async function patchIsAvailableCourt(courtId: string) {
+  return await prisma.court.update({
+    where: { id: courtId },
+    data: { isAvailable: true },
+  });
+}

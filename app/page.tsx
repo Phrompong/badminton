@@ -43,32 +43,42 @@ export default function Page() {
   return (
     <>
       <div className="flex flex-col gap-8">
-        <header className="bg-[#1C2638] w-screen top-0 shadow-xl p-8">
-          <div className="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-4">
-            <span className="text-white">Badminton</span>
-            <div className="flex justify-start gap-2">
-              <Button
-                text="Import"
-                Icon={UserPlus}
-                onClick={() => setIsImportModalPlayerOpen((prev) => !prev)}
-              />
-              <Button
-                text="Setting"
-                Icon={Settings}
-                onClick={() => setIsSettingModalOpen((prev) => !prev)}
-              />
-              <Button
-                text="Random"
-                Icon={Shuffle}
-                onClick={() => setIsRandomPlayerModalOpen((prev) => !prev)}
-              />
+        {code ? (
+          <header className="bg-[#1C2638] w-screen top-0 shadow-xl p-8">
+            <div className="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-4">
+              <span className="text-white">Badminton</span>
+              <div className="flex justify-start gap-2">
+                <Button
+                  text="Import"
+                  Icon={UserPlus}
+                  onClick={() => setIsImportModalPlayerOpen((prev) => !prev)}
+                />
+                <Button
+                  text="Setting"
+                  Icon={Settings}
+                  onClick={() => setIsSettingModalOpen((prev) => !prev)}
+                />
+                <Button
+                  text="Random"
+                  Icon={Shuffle}
+                  onClick={() => setIsRandomPlayerModalOpen((prev) => !prev)}
+                />
+              </div>
             </div>
-          </div>
-        </header>
+          </header>
+        ) : (
+          <></>
+        )}
         <main className="p-1">
-          <div className="max-w-7xl mx-20 mx-auto flex flex-col gap-6">
-            {code ? <Main refresh={refresh} /> : <Session />}
-          </div>
+          {code ? (
+            <div className="max-w-7xl mx-auto flex flex-col gap-6">
+              <Main refresh={refresh} />
+            </div>
+          ) : (
+            <div className="mt-50 flex items-center justify-center">
+              <Session />
+            </div>
+          )}
         </main>
       </div>
 

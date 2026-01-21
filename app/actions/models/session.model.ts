@@ -7,7 +7,7 @@ export interface CreateSessionInput {
   roomCode: string;
   createdBy?: string | null;
   amountPerGame: number;
-  courtNames: string[];
+  courtNames: { courtNo: number; courtName: string }[];
 }
 
 export interface ResponseSession {

@@ -27,13 +27,13 @@ export async function createSession(params: CreateSessionInput) {
       });
 
       let countNo = 0;
-      for (const courtName of params.courtNames) {
+      for (const item of params.courtNames) {
         countNo += 1;
         await tx.court.create({
           data: {
             no: countNo,
             sessionId: createdSession.id,
-            name: courtName,
+            name: item.courtName,
             createdBy: actorId,
             updatedBy: actorId,
           },
@@ -53,7 +53,6 @@ export async function createSession(params: CreateSessionInput) {
 export async function getSessionByRoomCode(
   roomCode: string,
 ): Promise<ResponseSession | null> {
-  console.log("Getting session by room code:", roomCode);
   const session = await prisma.session.findFirst({
     where: {
       roomCode,

@@ -142,3 +142,12 @@ export async function getTransactionByTransactionId(transactionId: string) {
     },
   });
 }
+
+export async function checkPlayerInActiveCourt(courtId: string) {
+  return await prisma.transaction_Random.findFirst({
+    where: {
+      courtId,
+      isEndGame: false,
+    },
+  });
+}

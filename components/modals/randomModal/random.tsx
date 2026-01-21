@@ -19,6 +19,7 @@ import { useSearchParams } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import ConfirmModal from "../confirmModal";
 import { v4 as uuidv4 } from "uuid";
+import { getCourtAvailable } from "@/app/actions/court";
 
 interface IRandom {
   session: any;
@@ -242,9 +243,51 @@ const Random: FC<IRandom> = ({ session }) => {
     setIsOpenModal(false);
   };
 
+  const random = async (players: any[], courts: any[]) => {
+    let results: any[] = [];
+
+    const shuffledPlayers = _.sampleSize(players, 4);
+
+    const court = _.sampleSize(courts, 1)[0];
+
+    results.push({
+      courtId: court?.id,
+      court: court?.name,
+      teamA: [shuffledPlayers[0], shuffledPlayers[1]],
+      teamB: [shuffledPlayers[2], shuffledPlayers[3]],
+    });
+
+    setDataItems((prev: any) => [...prev, ...results]);
+
+    // * Remove ผู้เล่นที่ถูกสุ่มออกจาก players
+    const remainingPlayers = players.filter(
+      (p) => !shuffledPlayers.includes(p),
+    );
+
+    // * Remove สนามที่ถูกสุ่มออกจาก courts
+    const remainingCourts = courts.filter((c) => c.name !== court?.name);
+
+    if (remainingPlayers.length >= 4 && remainingCourts.length > 0) {
+      random(remainingPlayers, remainingCourts);
+    }
+  };
+
+  const handleClickNewCourt = async () => {
+    const playerReady = await getAllOnlinePlayers(session.id);
+
+    if (playerReady.length === 0) return;
+
+    const courtAvailable = await getCourtAvailable(roomCode);
+
+    if (!courtAvailable || courtAvailable.length === 0) return;
+
+    await random(playerReady, courtAvailable);
+  };
+
   return (
     <>
-      <div className="flex flex-col mt-12">
+      <div className="flex flex-col mt-12 gap-2">
+        <button onClick={() => handleClickNewCourt()}>สุ่ม Court ใหม่</button>
         {dataItems.map(({ transactionRandomId, court, teamA, teamB }) => (
           <div
             key={court}

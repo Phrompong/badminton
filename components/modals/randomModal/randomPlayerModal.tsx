@@ -14,7 +14,7 @@ import {
   createTransactionRandom,
   getTransactionRandom,
 } from "@/app/actions/transactionRandom";
-import { getCourtAvailable } from "@/app/actions/court";
+import { getCourtAvailable, patchIsAvailableCourt } from "@/app/actions/court";
 import _ from "lodash";
 
 interface IRandomPlayerModalProps {
@@ -61,24 +61,30 @@ const RandomPlayerModal: FC<IRandomPlayerModalProps> = ({ open, onClose }) => {
   }, [code, open]);
 
   useEffect(() => {
-    if (resultsRandom.length === 0) return;
+    const init = async () => {
+      if (resultsRandom.length === 0) return;
 
-    for (const itemRandom of resultsRandom) {
-      const bodyTransactionRandom = {
-        sessionId: session!.id,
-        courtId: itemRandom.courtId,
-        createdDate: new Date(),
-        createdBy: "00000000-0000-0000-0000-000000000000",
-        updatedDate: new Date(),
-        updatedBy: "00000000-0000-0000-0000-000000000000",
-        playerId_A1: itemRandom.teamA[0].id,
-        playerId_A2: itemRandom.teamA[1].id,
-        playerId_B3: itemRandom.teamB[0].id,
-        playerId_B4: itemRandom.teamB[1].id,
-      };
+      for (const itemRandom of resultsRandom) {
+        const bodyTransactionRandom = {
+          sessionId: session!.id,
+          courtId: itemRandom.courtId,
+          createdDate: new Date(),
+          createdBy: "00000000-0000-0000-0000-000000000000",
+          updatedDate: new Date(),
+          updatedBy: "00000000-0000-0000-0000-000000000000",
+          playerId_A1: itemRandom.teamA[0].id,
+          playerId_A2: itemRandom.teamA[1].id,
+          playerId_B3: itemRandom.teamB[0].id,
+          playerId_B4: itemRandom.teamB[1].id,
+        };
 
-      createTransactionRandom([bodyTransactionRandom]);
-    }
+        await createTransactionRandom([bodyTransactionRandom]);
+
+        await patchIsAvailableCourt(itemRandom.courtId);
+      }
+    };
+
+    init();
   }, [resultsRandom]);
 
   const random = async (players: any[], courts: any[]) => {

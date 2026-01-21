@@ -13,6 +13,7 @@ import {
 import type { Dayjs } from "dayjs";
 import { message } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
+import Courts from "../courts";
 
 const title = () => {
   return (
@@ -197,33 +198,15 @@ const SessionModal = ({ open, onCancel }: ISessionModalProps) => {
               </div>
 
               {courtCount && (
-                <div className="flex flex-col gap-2 bg-[#F0FDF9] p-2 rounded-md border-2 border-[#CAF9E2]">
-                  <Form.List name="courtNames">
-                    {() =>
-                      Array.from(
-                        { length: Number(courtCount) || 0 },
-                        (_, index) => index + 1,
-                      ).map((item) => {
-                        return (
-                          <Form.Item<string>
-                            key={item}
-                            label={`ชื่อสนามที่ ${item}`}
-                            name={item - 1}
-                            style={formItemStyle}
-                            rules={[
-                              {
-                                required: true,
-                                message: `กรุณากรอกชื่อสนามที่ ${item}`,
-                              },
-                            ]}
-                          >
-                            <Input placeholder={`เช่น สนาม A${item}`} />
-                          </Form.Item>
-                        );
-                      })
-                    }
-                  </Form.List>
-                </div>
+                <Courts
+                  data={Array.from({
+                    length: Number(courtCount) || 0,
+                  }).map((item, index) => {
+                    return {
+                      courtNo: index + 1,
+                    };
+                  })}
+                />
               )}
 
               <div className="flex gap-2 ">
