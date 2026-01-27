@@ -135,7 +135,14 @@ const Main: FC<IMainProps> = ({ refresh }) => {
     if (!code) return;
 
     initSession(code);
-  }, [code, refresh, refreshTicket]);
+  }, [
+    code,
+    refresh,
+    refreshTicket,
+    isPaymentModalOpen,
+    isEditPlayerModalOpen,
+    isRemovePlayerModalOpen,
+  ]);
 
   return (
     <>
