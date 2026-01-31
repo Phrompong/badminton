@@ -20,7 +20,10 @@ type SessionFormValues = {
   courtCount?: number | string;
   roomCode: string;
   amountPerGame: number;
-  courtNames: string[];
+  courtNames: {
+    courtNo: number;
+    courtName: string;
+  }[];
 };
 
 interface ISessionModalProps {
@@ -43,10 +46,11 @@ const SessionModal = ({ open, onCancel }: ISessionModalProps) => {
         .millisecond(0)
         .toISOString();
 
+      console.log(value);
       const payload: CreateSessionInput = {
-        name: value.name.trim(),
+        name: value.name,
         startAt,
-        location: value.location?.trim() ?? "",
+        location: value.location || "",
         playerCount:
           value.playerCount === undefined || value.playerCount === null
             ? 0
@@ -54,11 +58,10 @@ const SessionModal = ({ open, onCancel }: ISessionModalProps) => {
         courtCount: Number(value.courtCount),
         roomCode: value.roomCode.trim(),
         amountPerGame: value.amountPerGame,
-        courtNames: value.courtNames.map((name, index) => ({
-          courtNo: index + 1,
-          courtName: name.trim(),
-        })),
+        courtNames: value.courtNames,
       };
+
+      console.log("payload :", payload);
 
       await createSession(payload);
 
@@ -71,6 +74,7 @@ const SessionModal = ({ open, onCancel }: ISessionModalProps) => {
         onCancel?.();
       }, 1000);
     } catch (error) {
+      console.error("Error creating session:", error);
       message.error("เกิดข้อผิดพลาดในการสร้างเซสชัน กรุณาลองใหม่อีกครั้ง");
       return;
     }

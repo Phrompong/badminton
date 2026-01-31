@@ -152,6 +152,11 @@ const Random: FC<IRandom> = ({ session }) => {
       return diffMinute <= 1;
     });
 
+    if (_playerOnline.length < 4) {
+      alert("ไม่มีผู้เล่นเพียงพอสำหรับการสุ่มใหม่ ");
+      return;
+    }
+
     // * จะไม่เอาผู้เล่นจาก court อื่น มาร่วมในการสุ่ม
     if (playerOnCourtOther) {
       for (const p of playerOnCourtOther.teamA) {
@@ -309,10 +314,12 @@ const Random: FC<IRandom> = ({ session }) => {
   const handleClickNewCourt = async () => {
     const playerReady = await getAllOnlinePlayers(session.id);
 
+    console.log("playerReady :", playerReady);
     if (playerReady.length === 0 || playerReady.length < 4) return;
 
     const courtAvailable = await getCourtAvailable(roomCode);
 
+    console.log("courtAvailable :", courtAvailable);
     if (!courtAvailable || courtAvailable.length === 0) return;
 
     await random(playerReady, courtAvailable);
@@ -321,7 +328,14 @@ const Random: FC<IRandom> = ({ session }) => {
   return (
     <>
       <div className="flex flex-col mt-12 gap-2">
-        <button onClick={() => handleClickNewCourt()}>สุ่ม Court ใหม่</button>
+        <div className="flex justify-end">
+          <button
+            className="border border-1 px-4 py-2 rounded-md w-auto w-32 cursor-pointer bg-green-100 border-green-300 hover:bg-green-200 hover:border-green-400"
+            onClick={() => handleClickNewCourt()}
+          >
+            Reload
+          </button>
+        </div>
         {dataItems.map(({ transactionRandomId, court, teamA, teamB }) => (
           <div
             key={court}
