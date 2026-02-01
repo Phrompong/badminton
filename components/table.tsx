@@ -11,25 +11,6 @@ const headers = [
   "จัดการ",
 ];
 
-const rows = [
-  {
-    id: 1,
-    status: "เช็คอิน",
-    name: "สมชาย ใจดี",
-    level: "กลาง",
-    games: 10,
-    payment: "ชำระแล้ว",
-  },
-  {
-    id: 2,
-    status: "เช็คอิน",
-    name: "มะลิ ตั้งใจ",
-    level: "เริ่มต้น",
-    games: 5,
-    payment: "ค้างชำระ",
-  },
-];
-
 interface ITableProps {
   className?: string;
   handleUpdateOnlineStatus: (playerId: string, isOnline: boolean) => void;

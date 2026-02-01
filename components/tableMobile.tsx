@@ -17,7 +17,7 @@ const TableMobile: FC<TableMobileProps> = ({
 }) => {
   return (
     <div
-      className={`flex flex-col border border-[#94a3b8] rounded-md ${className}`}
+      className={`flex flex-col border border-[#94a3b8] rounded-md sticky bg-white ${className}`}
     >
       {data.map((row) => (
         <div
@@ -31,7 +31,7 @@ const TableMobile: FC<TableMobileProps> = ({
           </div>
 
           <div className="flex justify-between">
-            <span className="font-bold text-xl">ช้อป</span>
+            <span className="font-bold text-xl">{row.name}</span>
             <span className="font-bold text-xs bg-[#F0FDF4] w-18 justify-center text-[#008236] border p-1 flex items-center rounded-2xl">
               ชำระแล้ว
             </span>

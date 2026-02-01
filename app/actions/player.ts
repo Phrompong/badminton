@@ -178,3 +178,16 @@ export async function removePlayer(playerId: string) {
     throw error;
   }
 }
+
+export async function checkPlayerIsPlaying(playerId: string) {
+  const player = await prisma.player.findFirst({
+    where: {
+      id: playerId,
+    },
+    select: {
+      isPlaying: true,
+    },
+  });
+
+  return player?.isPlaying || false;
+}

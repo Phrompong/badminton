@@ -193,7 +193,7 @@ const SessionModal = ({ open, onCancel }: ISessionModalProps) => {
                   { required: true, message: "กรุณากรอกค่าเล่นต่อเกมส์" },
                 ]}
               >
-                <Input placeholder="เช่น 100" />
+                <Input placeholder="เช่น 100" type="number" />
               </Form.Item>
 
               <Form.Item<string>

@@ -13,6 +13,7 @@ import PaymentModal from "@/components/modals/paymentModal";
 import EditPlayerModal from "@/components/modals/editPlayerModal";
 import { copyText } from "@/utils/general";
 import {
+  checkPlayerIsPlaying,
   getPlayersBySessionId,
   removePlayer,
   updateOnlineStatus,
@@ -95,6 +96,14 @@ const Main: FC<IMainProps> = ({ refresh }) => {
     playerId: string,
     isOnline: boolean,
   ) => {
+    // * Check user is playing with code
+    const isPlaying = await checkPlayerIsPlaying(playerId);
+
+    if (isPlaying) {
+      message.error("ไม่สามารถเปลี่ยนสถานะได้ ขณะกำลังเล่นอยู่");
+      return;
+    }
+
     // 1. Update UI ทันที (ไม่ต้องรอ)
     setPlayersData((prev) =>
       prev.map((p) => (p.id === playerId ? { ...p, isOnline } : p)),
