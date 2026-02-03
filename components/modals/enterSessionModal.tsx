@@ -45,20 +45,16 @@ const EnterSessionModal: FC<IEnterSessionModalProps> = ({ open, onCancel }) => {
       }
       centered
       width={400}
-      afterClose={() => setReady(false)}
-      afterOpenChange={() => setReady(true)}
     >
-      {ready && (
-        <Form form={form} layout="horizontal" onFinish={handleSubmitForm}>
-          <Form.Item<string>
-            label=""
-            name="sessionKey"
-            rules={[{ required: true, message: "กรุณากรอกชื่อเซสชัน" }]}
-          >
-            <Input className="w-full h-14" placeholder="กรุณากรอกชื่อเซสชัน" />
-          </Form.Item>
-        </Form>
-      )}
+      <Form form={form} layout="horizontal" onFinish={handleSubmitForm}>
+        <Form.Item<string>
+          label=""
+          name="sessionKey"
+          rules={[{ required: true, message: "กรุณากรอกชื่อเซสชัน" }]}
+        >
+          <Input className="w-full h-14" placeholder="กรุณากรอกชื่อเซสชัน" />
+        </Form.Item>
+      </Form>
     </Modal>
   );
 };
