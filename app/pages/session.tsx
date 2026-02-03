@@ -1,7 +1,7 @@
 import EnterSessionModal from "@/components/modals/enterSessionModal";
 import SessionModal from "@/components/modals/sessionFormModal";
 import { KeyRound, Plus, Sparkles } from "lucide-react";
-import { startTransition, useState } from "react";
+import { useState } from "react";
 
 const Session = () => {
   const [isSessionModalOpen, setIsSessionModalOpen] = useState<boolean>(false);
@@ -9,15 +9,11 @@ const Session = () => {
     useState<boolean>(false);
 
   const handleClickCreateSession = () => {
-    startTransition(() => {
-      setIsSessionModalOpen(true);
-    });
+    setIsSessionModalOpen(true);
   };
 
   const handleClickEnterSession = () => {
-    startTransition(() => {
-      setIsEnterSessionModalOpen(true);
-    });
+    setIsEnterSessionModalOpen(true);
   };
 
   return (
@@ -35,14 +31,14 @@ const Session = () => {
         <div className="flex gap-4 justify-center ">
           <button
             onClick={handleClickCreateSession}
-            className="w-40 h-20 flex items-center justify-center bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg p-2 gap-2 cursor-pointer hover:from-emerald-600 hover:to-teal-700 shadow-xl transition active:scale-95"
+            className="w-40 h-20 flex items-center justify-center bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg p-2 gap-2 cursor-pointer hover:from-emerald-600 hover:to-teal-700 shadow-xl transition"
           >
             <Plus className="w-5 h-5 text-white" />
             <span className="text-white text-md">สร้างเซสชันใหม่</span>
           </button>
           <button
             onClick={handleClickEnterSession}
-            className="w-40 h-20 flex items-center justify-center p-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition gap-2 cursor-pointer active:scale-95"
+            className="w-40 h-20 flex items-center justify-center p-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition gap-2 cursor-pointer"
           >
             <KeyRound className="w-5 h-5" />
             <span className="text-md">เข้าสู่เซสชันที</span>

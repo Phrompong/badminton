@@ -1,5 +1,5 @@
 import { Form, Input, Modal } from "antd";
-import { FC, useEffect, memo, useCallback } from "react";
+import { FC, useEffect, memo, useCallback, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Footer from "../footer";
 import Title from "../title";
@@ -14,6 +14,7 @@ const EnterSessionModal: FC<IEnterSessionModalProps> = ({ open, onCancel }) => {
   const [form] = Form.useForm();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     if (!open) {
@@ -44,19 +45,20 @@ const EnterSessionModal: FC<IEnterSessionModalProps> = ({ open, onCancel }) => {
       }
       centered
       width={400}
-      maskClosable={false}
-      destroyOnClose={false}
-      forceRender={true}
+      afterClose={() => setReady(false)}
+      afterOpenChange={() => setReady(true)}
     >
-      <Form form={form} layout="horizontal" onFinish={handleSubmitForm}>
-        <Form.Item<string>
-          label=""
-          name="sessionKey"
-          rules={[{ required: true, message: "กรุณากรอกชื่อเซสชัน" }]}
-        >
-          <Input className="w-full h-14" placeholder="กรุณากรอกชื่อเซสชัน" />
-        </Form.Item>
-      </Form>
+      {ready && (
+        <Form form={form} layout="horizontal" onFinish={handleSubmitForm}>
+          <Form.Item<string>
+            label=""
+            name="sessionKey"
+            rules={[{ required: true, message: "กรุณากรอกชื่อเซสชัน" }]}
+          >
+            <Input className="w-full h-14" placeholder="กรุณากรอกชื่อเซสชัน" />
+          </Form.Item>
+        </Form>
+      )}
     </Modal>
   );
 };
